@@ -41,9 +41,13 @@ public class SaleService {
 	}
 
 
-	public SummaryMinDTO getSummary(String minDate, String maxDate, Pageable pageable) {
-		// TODO
-		return null;
+	public Page<SummaryMinDTO> getSummary(String minDate, String maxDate, Pageable pageable) {
+		LocalDate finalDate = createFinalDate(maxDate);
+		LocalDate initialDate = createInitialDate(minDate, finalDate);
+
+		Page<SummaryMinDTO> dto = repository.getSummary(initialDate, finalDate, pageable);
+
+		return dto;
 	}
 
 	private LocalDate createInitialDate(String date, LocalDate finalDate){

@@ -35,8 +35,9 @@ public class SaleService {
 		LocalDate finalDate = createFinalDate(maxDate);
 		LocalDate initialDate = createInitialDate(minDate, finalDate);
 
-		Page<ReportMinDTO> dto = repository.getReport(initialDate, finalDate, name, pageable);
+		Page<Sale> sales = repository.getReport(initialDate, finalDate, name, pageable);
 
+		Page<ReportMinDTO> dto = sales.map(sale -> new ReportMinDTO(sale));
 		return dto;
 	}
 

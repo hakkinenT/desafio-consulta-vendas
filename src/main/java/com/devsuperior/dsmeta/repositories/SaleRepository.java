@@ -13,14 +13,17 @@ import java.time.LocalDate;
 
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
-    @Query(value = "SELECT  new com.devsuperior.dsmeta.dto.ReportMinDTO(sale.id, sale.amount, sale.date, sale.seller.name) " +
+    @Query(value = "SELECT sale " +
             "FROM Sale sale " +
+            "JOIN FETCH sale.seller " +
             "WHERE (sale.date BETWEEN :minDate AND :maxDate) " +
             "AND (UPPER(sale.seller.name) LIKE UPPER(CONCAT('%', :name)))",
-    countQuery = "SELECT COUNT(sale) FROM Sale sale JOIN sale.seller " +
+    countQuery = "SELECT COUNT(sale) " +
+            "FROM Sale sale " +
+            "JOIN sale.seller " +
             "WHERE (sale.date BETWEEN :minDate AND :maxDate) " +
             "AND (UPPER(sale.seller.name) LIKE UPPER(CONCAT('%', :name)))")
-    Page<ReportMinDTO> getReport(LocalDate minDate, LocalDate maxDate, String name, Pageable pageable);
+    Page<Sale> getReport(LocalDate minDate, LocalDate maxDate, String name, Pageable pageable);
 
     @Query(value = "SELECT new com.devsuperior.dsmeta.dto.SummaryMinDTO(sale.seller.name, SUM(sale.amount)) " +
             "FROM Sale sale " +

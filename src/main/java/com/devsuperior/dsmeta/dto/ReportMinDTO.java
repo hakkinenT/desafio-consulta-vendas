@@ -6,22 +6,24 @@ import java.time.LocalDate;
 
 public class ReportMinDTO {
     private Long id;
-    private Double amount;
+
     private LocalDate date;
+
+    private Double amount;
 
     private String sellerName;
 
     public ReportMinDTO(Long id, Double amount, LocalDate date, String sellerName) {
         this.id = id;
-        this.amount = amount;
         this.date = date;
+        this.amount = amount;
         this.sellerName = sellerName;
     }
 
     public ReportMinDTO(Sale entity) {
         id = entity.getId();
-        amount = entity.getAmount();
         date = entity.getDate();
+        amount = entity.getAmount();
         sellerName = entity.getSeller().getName();
     }
 
@@ -29,15 +31,15 @@ public class ReportMinDTO {
         return id;
     }
 
-    public Double getAmount() {
-        return amount;
-    }
-
     public LocalDate getDate() {
         return date;
     }
 
-    public String getSeller() {
+    public Double getAmount() {
+        return amount;
+    }
+
+    public String getSellerName() {
         return sellerName;
     }
 }

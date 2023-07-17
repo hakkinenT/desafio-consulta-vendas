@@ -10,29 +10,27 @@ import com.devsuperior.dsmeta.entities.Sale;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     @Query(value = "SELECT sale " +
             "FROM Sale sale " +
             "JOIN FETCH sale.seller " +
-            "WHERE (sale.date BETWEEN :minDate AND :maxDate) " +
+            "WHERE (sale.date >= :minDate AND sale.date <= :maxDate) " +
             "AND (UPPER(sale.seller.name) LIKE UPPER(CONCAT('%', :name)))",
     countQuery = "SELECT COUNT(sale) " +
             "FROM Sale sale " +
             "JOIN sale.seller " +
-            "WHERE (sale.date BETWEEN :minDate AND :maxDate) " +
+            "WHERE (sale.date >= :minDate AND sale.date <= :maxDate) " +
             "AND (UPPER(sale.seller.name) LIKE UPPER(CONCAT('%', :name)))")
     Page<Sale> getReport(LocalDate minDate, LocalDate maxDate, String name, Pageable pageable);
 
-    @Query(value = "SELECT new com.devsuperior.dsmeta.dto.SummaryMinDTO(sale.seller.name, SUM(sale.amount)) " +
+    @Query("SELECT new com.devsuperior.dsmeta.dto.SummaryMinDTO(sale.seller.name, SUM(sale.amount)) " +
             "FROM Sale sale " +
-            "WHERE (sale.date BETWEEN :minDate AND :maxDate) " +
-            "GROUP BY sale.seller.name",
-    countQuery = "SELECT COUNT(sale) FROM Sale sale JOIN sale.seller " +
-            "WHERE (sale.date BETWEEN :minDate AND :maxDate) " +
+            "WHERE (sale.date >= :minDate AND sale.date <= :maxDate) " +
             "GROUP BY sale.seller.name"
     )
-    Page<SummaryMinDTO> getSummary(LocalDate minDate, LocalDate maxDate, Pageable pageable);
+    List<SummaryMinDTO> getSummary(LocalDate minDate, LocalDate maxDate);
 
 }
